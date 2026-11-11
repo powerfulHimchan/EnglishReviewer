@@ -1,0 +1,18 @@
+server:
+  port: ${PORT:8080}
+  error:
+    include-message: never
+    include-stacktrace: never
+  tomcat:
+    max-http-form-post-size: 16KB
+spring:
+  application:
+    name: english-reviewer
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+reviewer:
+  token: ${REVIEWER_TOKEN:}
+  openai-key: ${OPENAI_API_KEY:}
+  model: ${OPENAI_MODEL:gpt-4.1-mini}
+  provider-url: ${OPENAI_URL:https://api.openai.com/v1/chat/completions}
