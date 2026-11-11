@@ -59,7 +59,7 @@ jobs:
           disable-animations: true
           script: |
             ./gradlew :app:connectedDebugAndroidTest --stacktrace
-            adb pull /sdcard/Android/data/app.englishreviewer/files/screenshots device-screenshots
+            adb pull /data/local/tmp/english-reviewer-screenshots device-screenshots
       - uses: actions/upload-artifact@v4
         if: always()
         with:

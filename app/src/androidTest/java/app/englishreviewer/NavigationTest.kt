@@ -2,13 +2,12 @@ package app.englishreviewer
 
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import android.graphics.Bitmap
 import androidx.test.platform.app.InstrumentationRegistry
 import app.englishreviewer.data.*
 import app.englishreviewer.core.*
 import kotlinx.coroutines.*
 import kotlinx.serialization.encodeToString
-import java.io.File
+import java.io.FileInputStream
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -22,10 +21,12 @@ class NavigationTest {
     private fun screenshot(name: String) {
         compose.waitForIdle()
         val instrumentation = InstrumentationRegistry.getInstrumentation()
-        val dir = File(instrumentation.targetContext.getExternalFilesDir(null), "screenshots").apply { mkdirs() }
-        instrumentation.uiAutomation.takeScreenshot().let { bitmap ->
-            File(dir, "$name.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
-            bitmap.recycle()
+        // AGP uninstalls the target app after the test suite; shell-owned files survive cleanup.
+        listOf("mkdir -p /data/local/tmp/english-reviewer-screenshots",
+            "screencap -p /data/local/tmp/english-reviewer-screenshots/$name.png").forEach { command ->
+            instrumentation.uiAutomation.executeShellCommand(command).use { descriptor ->
+                FileInputStream(descriptor.fileDescriptor).use { it.readBytes() }
+            }
         }
     }
     @Test fun studiesSavedAnalysisAndCompletesReview() {
