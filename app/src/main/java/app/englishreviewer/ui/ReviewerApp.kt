@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.provider.Settings as AndroidSettings
 import androidx.activity.compose.BackHandler
@@ -32,6 +31,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
@@ -268,7 +268,7 @@ private fun SettingsScreen(settings: AppSettings, vm: ReviewerViewModel, refresh
                 TextButton({ context.startActivity(Intent(AndroidSettings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(AndroidSettings.EXTRA_APP_PACKAGE, context.packageName)) }) { Text("알림 권한 설정") }
             }
             Text(if (exact) "설정한 시각에 알림을 예약해요." else "현재는 절전 상태에 따라 알림이 늦어질 수 있어요.", color = Muted, fontSize = 13.sp)
-            if (!exact && Build.VERSION.SDK_INT >= 31) OutlinedButton({ context.startActivity(Intent(AndroidSettings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:${context.packageName}"))) }) { Text("정확한 시간 알림 허용") }
+            if (!exact && Build.VERSION.SDK_INT >= 31) OutlinedButton({ context.startActivity(Intent(AndroidSettings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, "package:${context.packageName}".toUri())) }) { Text("정확한 시간 알림 허용") }
         } }
         item { ContentCard("AI 분석 연결") {
             Text("문장을 분석할 서버를 연결해 주세요. 연결 전에도 문장 저장과 검색은 사용할 수 있어요.", color = Muted, fontSize = 14.sp)
