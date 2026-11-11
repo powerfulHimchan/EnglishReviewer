@@ -12,12 +12,19 @@ class MainActivity : ComponentActivity() {
     private var reviewRequest by mutableIntStateOf(0)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (intent.getBooleanExtra("review", false)) {
+            reviewRequest++
+            intent.removeExtra("review")
+        }
         enableEdgeToEdge()
         setContent { ReviewerApp(reviewRequest) }
     }
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        if (intent.getBooleanExtra("review", false)) reviewRequest++
+        if (intent.getBooleanExtra("review", false)) {
+            reviewRequest++
+            intent.removeExtra("review")
+        }
     }
 }

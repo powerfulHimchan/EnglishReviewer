@@ -41,9 +41,12 @@ class NavigationTest {
         compose.waitUntil(10_000) { compose.onAllNodesWithText("I enjoy cooking.").fetchSemanticsNodes().isNotEmpty() }
         screenshot("today-review")
         compose.onNodeWithText("I enjoy cooking.").performClick()
-        compose.onNodeWithText("문법 포인트").performScrollTo().assertIsDisplayed()
+        compose.onNode(hasScrollToIndexAction()).performScrollToNode(hasText("문법 포인트"))
+        compose.onNodeWithText("문법 포인트").assertIsDisplayed()
         screenshot("grammar-detail")
-        compose.onNodeWithText("오늘의 복습 완료").performScrollTo().performClick()
+        compose.onNode(hasScrollToIndexAction()).performScrollToNode(hasText("오늘의 복습 완료"))
+        compose.onNodeWithText("오늘의 복습 완료").performClick()
+        compose.waitUntil(10_000) { compose.onAllNodesWithText("복습 완료 · 다시 학습하기").fetchSemanticsNodes().isNotEmpty() }
         compose.onNodeWithText("복습 완료 · 다시 학습하기").assertIsDisplayed()
         compose.onNodeWithContentDescription("뒤로").performClick()
         compose.onNodeWithText("보관함").performClick()
@@ -61,7 +64,8 @@ class NavigationTest {
         compose.onNodeWithContentDescription("뒤로").performClick()
         compose.onNodeWithText("영어 문장이나 한국어 뜻 검색").performTextInput("COOKING")
         compose.onNodeWithText("I enjoy cooking at home.").performClick()
-        compose.onNodeWithText("문장 삭제").performScrollTo().performClick()
+        compose.onNode(hasScrollToIndexAction()).performScrollToNode(hasText("문장 삭제"))
+        compose.onNodeWithText("문장 삭제").performClick()
         compose.onNodeWithText("삭제").performClick()
         compose.waitUntil(10_000) { compose.onAllNodesWithText("0개의 문장").fetchSemanticsNodes().isNotEmpty() }
     }

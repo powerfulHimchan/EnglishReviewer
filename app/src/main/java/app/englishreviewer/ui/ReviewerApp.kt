@@ -36,6 +36,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -73,7 +74,7 @@ fun ReviewerApp(reviewRequest: Int = 0, vm: ReviewerViewModel = viewModel()) {
         onDispose { lifecycle.removeObserver(observer) }
     }
     LaunchedEffect(Unit) { vm.messages.collect { snackbar.showSnackbar(it) } }
-    LaunchedEffect(Unit) { while (true) { delay(60_000); vm.refreshDay() } }
+    LaunchedEffect(lifecycle) { lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) { while (true) { vm.refreshDay(); delay(60_000) } } }
     LaunchedEffect(reviewRequest) { if (reviewRequest > 0) { tab = 0; selectedId = null; adding = false } }
     BackHandler(selectedId != null || adding || tab != 0) {
         if (selectedId != null) selectedId = null else if (adding) adding = false else tab = 0

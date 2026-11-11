@@ -61,12 +61,12 @@ class AnalysisWorker(context: Context, params: WorkerParameters) : CoroutineWork
     companion object {
         private val client = OkHttpClient.Builder().connectTimeout(15, TimeUnit.SECONDS).readTimeout(75, TimeUnit.SECONDS)
             .callTimeout(90, TimeUnit.SECONDS).followRedirects(false).followSslRedirects(false).build()
-        fun enqueue(context: Context, id: String) {
+        fun enqueue(context: Context, id: String, replace: Boolean = false) {
             val request = OneTimeWorkRequestBuilder<AnalysisWorker>()
                 .setInputData(workDataOf("sentenceId" to id))
                 .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
                 .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS).build()
-            WorkManager.getInstance(context).enqueueUniqueWork("analysis-$id", ExistingWorkPolicy.KEEP, request)
+            WorkManager.getInstance(context).enqueueUniqueWork("analysis-$id", if (replace) ExistingWorkPolicy.REPLACE else ExistingWorkPolicy.KEEP, request)
         }
     }
 }

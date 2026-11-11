@@ -55,7 +55,7 @@ class ReviewerViewModel(application: Application) : AndroidViewModel(application
     }
     fun retry(id: String) = viewModelScope.launch(Dispatchers.IO) {
         dao.status(id, "queued")
-        AnalysisWorker.enqueue(context, id)
+        AnalysisWorker.enqueue(context, id, replace = true)
     }
     fun delete(id: String) = viewModelScope.launch(Dispatchers.IO) {
         androidx.work.WorkManager.getInstance(context).cancelUniqueWork("analysis-$id")
